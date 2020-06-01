@@ -7,11 +7,14 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { ToastProvider } from "react-toast-notifications";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ToastProvider autoDismiss={300} placement='top-center'>
-      <App />
+    <ToastProvider autoDismiss={500} placement='top-center'>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </ToastProvider>
   </React.StrictMode>,
   document.getElementById('root')

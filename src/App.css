@@ -1,4 +1,17 @@
-.App {
-    text-align: center;
-    user-select: none;
+#root {
+    display: flex!important;
+    flex-direction: column;
+    height: 100%;
+    height: 100vh;
+}
+
+.App-Body {
+    overflow: auto;
+    flex: 1;
+}
+
+.is-flex-centered {
+    display: flex!important;
+    justify-content: center;
+    align-items: center;
 }
