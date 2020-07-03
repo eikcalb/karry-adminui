@@ -9,11 +9,12 @@ import * as serviceWorker from './serviceWorker';
 import { ToastProvider } from "react-toast-notifications";
 import { BrowserRouter } from "react-router-dom";
 
+
 ReactDOM.render(
   <React.StrictMode>
-    <ToastProvider autoDismiss={500} placement='top-center'>
+    <ToastProvider autoDismiss={500} placement='bottom-center'>
       <BrowserRouter>
-        <App />
+          <App />
       </BrowserRouter>
     </ToastProvider>
   </React.StrictMode>,
