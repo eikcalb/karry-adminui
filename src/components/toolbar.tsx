@@ -1,10 +1,14 @@
 import React, { useState, useContext } from 'react'
 import { STYLES } from '../lib/theme'
-import { FaJoint, FaUser } from "react-icons/fa";
+import { FaCog, FaJoint, FaLayerGroup, FaSignOutAlt, FaUser, FaUserCircle, FaUserPlus, FaUsers } from "react-icons/fa";
+import { AiOutlineNotification } from "react-icons/ai";
+import { FiLogIn } from "react-icons/fi";
 import { APPLICATION_CONTEXT, VIEW_CONTEXT } from '../lib';
+import { Link, NavLink } from 'react-router-dom';
+import { links } from "../lib/util";
 
 
-const AUTOHIDE_TIMEOUT = 5000
+const AUTOHIDE_TIMEOUT = 20000
 let timer: any
 // TODO: build your own toolbar styling.
 
@@ -16,10 +20,10 @@ export default function Toolbar() {
     return (
         <nav className='navbar' role='navigation' style={STYLES.toolbar}>
             <div className='navbar-brand'>
-                <a className='navbar-item' href='#'>
-                    OWA
-                </a>
-                <a role="button" className={`navbar-burger burger ${state.showMenu ? 'is-active' : ''}`} aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onClick={() => {
+                <Link className='navbar-item' to='#'>
+                    {ctx.name}
+                </Link>
+                <div role="button" className={`navbar-burger burger ${state.showMenu ? 'is-active' : ''}`} aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onClick={() => {
                     // Clear the existing timer for closing menu and then hide/show the menu
                     clearTimeout(timer)
                     if (state.showMenu) {
@@ -34,23 +38,41 @@ export default function Toolbar() {
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
-                </a>
+                </div>
             </div>
             <div className={`navbar-menu ${state.showMenu ? 'is-active' : ''}`} >
-                <div className='navbar-start'>
-                    <div className='field has-addons is-uppercase'>
-                        <p className='control'>
-                            <button className='button'>
-                                <FaUser /> Login
-                            </button>
-                        </p>
-                        <p className='control'>
-                            <button className='button'>
-                                <FaUser /> Join
-                            </button>
-                        </p>
-                    </div>
-                </div>
+                {ctx.signedIn() && vctx.signedIn ? (
+                    <>
+                        <div className='navbar-start'>
+                            <NavLink className='navbar-item is-tab is-uppercase' exact to={links.dashboard} activeClassName='is-active'><FaLayerGroup />&nbsp; Dashboard</NavLink>
+                            <NavLink className='navbar-item is-tab is-uppercase' to={links.posts} activeClassName='is-active'><AiOutlineNotification />&nbsp; Posts</NavLink>
+                            <NavLink className='navbar-item is-tab is-uppercase' to={links.users} activeClassName='is-active'><FaUsers />&nbsp; Users</NavLink>
+                        </div>
+                        <div className='navbar-end'>
+                            <div className='navbar-item has-dropdown is-hoverable'>
+                                <div className='navbar-link is-flex-centered'>
+                                    <FaUserCircle />&nbsp; {ctx.user?.firstName}
+                                </div>
+                                <div className='navbar-dropdown is-right'>
+                                    <Link className='navbar-item is-flex-centered' to={links.settings}><FaCog />&nbsp; Settings</Link>
+                                    <hr className='navbar-divider' />
+                                    <Link className='navbar-item is-flex-centered' to={links.logout}><FaSignOutAlt />&nbsp; Logout</Link>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                        <div className='navbar-end'>
+                            <div className='buttons navbar-item has-addons is-uppercase'>
+                                <button className='button is-info is-rounded is-small is-outlined'>
+                                    <FiLogIn /> &nbsp; Login
+                                </button>
+                                <button className='button is-success is-rounded is-small'>
+                                    <FaUserPlus /> &nbsp; Join
+                                </button>
+                            </div>
+                        </div>
+                    )}
             </div>
         </nav>
     )

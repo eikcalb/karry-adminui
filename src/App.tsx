@@ -1,51 +1,45 @@
-import React, { useContext, useState, createContext } from 'react';
+import React, { useContext, useState, createContext, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { APPLICATION_CONTEXT, DEFAULT_APPLICATION, VIEW_CONTEXT } from './lib';
 import Toolbar from "./components/toolbar";
 import { Body } from './components/body';
+import { User } from './lib/user';
 
 
 interface AppState {
-  ready: boolean
+  ready: boolean,
+  user: User | null,
+  loading: boolean
 }
 /**
- * This is the main entry to OWA web application.
+ * This is the main entry to the web application.
  */
-class App extends React.PureComponent<{}, AppState> {
-  static contextType = APPLICATION_CONTEXT
-  context!: React.ContextType<typeof APPLICATION_CONTEXT>
-  readonly ViewContext: any
+function App() {
+  const [state, setState] = useState<AppState>({
+    ready: false,
+    user: null,
+    loading: false
+  })
 
-  constructor(props: {}) {
-    super(props)
-    // initialize application state
-    this.state = {
-      ready: false
-    }
-
-    this.ViewContext = {
-      setReady: (ready: boolean) => this.setState({ ready })
-    }
+  const viewContext = {
+    setSignedInUser: (user: User) => setState({ ...state, user }),
+    signedIn: state.user,
+    setLoading: (loading) => setState({ ...state, loading })
   }
 
-  componentDidMount() {
-    this.context.ready.then(() => this.setState({ ready: true }))
-  }
+  useEffect(() => {
+    DEFAULT_APPLICATION.ready.then(() => setState({ ...state, ready: true }))
+  }, [])
 
-  render() {
-    let ctx = this.context
-    let { ready } = this.state
-
-    return (
-      <APPLICATION_CONTEXT.Provider value={DEFAULT_APPLICATION}>
-        <VIEW_CONTEXT.Provider value={this.ViewContext}>
-          <Toolbar />
-          <Body showLoading={!ready} />
-        </VIEW_CONTEXT.Provider>
-      </APPLICATION_CONTEXT.Provider >
-    );
-  }
+  return (
+    <APPLICATION_CONTEXT.Provider value={DEFAULT_APPLICATION}>
+      <VIEW_CONTEXT.Provider value={viewContext}>
+        <Toolbar />
+        <Body showLoading={!state.ready || state.loading} />
+      </VIEW_CONTEXT.Provider>
+    </APPLICATION_CONTEXT.Provider >
+  )
 }
 
 export default App;

@@ -1,5 +1,35 @@
 import { createContext } from "react";
-import { Application } from '@eikcalb/owa_core'
+import { User } from "./user";
+
+export class Application {
+    ready: Promise<boolean>
+    name = "Karry Admin"
+    version = "1.0"
+
+    public user?: User
+
+    constructor() {
+        this.ready = new Promise(async (res, rej) => {
+            try {
+                // handle app initialization here
+                await this.init()
+                setTimeout(() => res(true), 10000)
+            } catch (e) {
+                console.log(e)
+                rej(e)
+            }
+        })
+    }
+
+    protected async init() {
+
+    }
+
+    signedIn() {
+        return this.user
+    }
+
+}
 
 export const MOCK_DATA = {
     route: {
@@ -18,7 +48,7 @@ export const MOCK_DATA = {
 export const DEFAULT_APPLICATION = new Application()
 
 /**
- * This is the application context used within OWA web application.
+ * This is the application context used within the web application.
  * 
  * This context provided the application engine and is not tied to any view rendering.
  * 
@@ -32,7 +62,15 @@ export const DEFAULT_APPLICATION = new Application()
 export const APPLICATION_CONTEXT = createContext<Application>(DEFAULT_APPLICATION)
 
 /**
- * This context is used for managing the views within OWA web app.
+ * This context is used for managing the views within the web app.
  * Activities such as loading and splashscreen are implemented using this context.
  */
-export const VIEW_CONTEXT = createContext<any>({})
+export const VIEW_CONTEXT = createContext<{
+    signedIn: null | User,
+    setSignedInUser: (user) => any,
+    setLoading:(loading:boolean)=>any
+}>({
+    signedIn: null,
+    setSignedInUser: () => { },
+    setLoading:()=>{}
+})
