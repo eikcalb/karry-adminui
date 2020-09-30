@@ -6,23 +6,24 @@ import { FiLogIn } from "react-icons/fi";
 import { APPLICATION_CONTEXT, VIEW_CONTEXT } from '../lib';
 import { Link, NavLink } from 'react-router-dom';
 import { links } from "../lib/util";
+import { link } from 'fs';
 
 
 const AUTOHIDE_TIMEOUT = 20000
 let timer: any
 // TODO: build your own toolbar styling.
 
-export default function Toolbar() {
+export default function Toolbar({ hidden = false }) {
     const [state, setState] = useState({ showMenu: false })
     const ctx = useContext(APPLICATION_CONTEXT)
     const vctx = useContext(VIEW_CONTEXT)
 
     return (
-        <nav className='navbar' role='navigation' style={STYLES.toolbar}>
+        <nav className={`navbar ${hidden ? 'is-hidden' : ''}`} role='navigation' style={STYLES.toolbar}>
             <div className='navbar-brand'>
-                <Link className='navbar-item' to='#'>
+                <div className='navbar-items is-flex-centered'>
                     {ctx.name}
-                </Link>
+                </div>
                 <div role="button" className={`navbar-burger burger ${state.showMenu ? 'is-active' : ''}`} aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onClick={() => {
                     // Clear the existing timer for closing menu and then hide/show the menu
                     clearTimeout(timer)
@@ -44,9 +45,9 @@ export default function Toolbar() {
                 {ctx.signedIn() && vctx.signedIn ? (
                     <>
                         <div className='navbar-start'>
-                            <NavLink className='navbar-item is-tab is-uppercase' exact to={links.dashboard} activeClassName='is-active'><FaLayerGroup />&nbsp; Dashboard</NavLink>
-                            <NavLink className='navbar-item is-tab is-uppercase' to={links.posts} activeClassName='is-active'><AiOutlineNotification />&nbsp; Posts</NavLink>
-                            <NavLink className='navbar-item is-tab is-uppercase' to={links.users} activeClassName='is-active'><FaUsers />&nbsp; Users</NavLink>
+                            <NavLink className='navbar-item is-tab is-uppercase' exact to={links.dashboard} activeClassName='is-active'>Dashboard</NavLink>
+                            <NavLink className='navbar-item is-tab is-uppercase' to={links.posts} activeClassName='is-active'>Posts</NavLink>
+                            <NavLink className='navbar-item is-tab is-uppercase' to={links.users} activeClassName='is-active'>Users</NavLink>
                         </div>
                         <div className='navbar-end'>
                             <div className='navbar-item has-dropdown is-hoverable'>
@@ -64,12 +65,12 @@ export default function Toolbar() {
                 ) : (
                         <div className='navbar-end'>
                             <div className='buttons navbar-item has-addons is-uppercase'>
-                                <button className='button is-info is-rounded is-small is-outlined'>
+                                <Link to={links.login} className='button is-info is-rounded is-small is-outlined'>
                                     <FiLogIn /> &nbsp; Login
-                                </button>
-                                <button className='button is-success is-rounded is-small'>
+                                </Link>
+                                <Link to={links.register} className='button is-success is-rounded is-small'>
                                     <FaUserPlus /> &nbsp; Join
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     )}

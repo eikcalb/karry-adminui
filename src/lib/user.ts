@@ -1,14 +1,18 @@
 export class User {
     firstName
-    lastname
+    lastName
     role: 'player' | 'manager' | 'superadmin'
-    token?:string
+    email: string
+    token?: string
 
     constructor(data) {
         this.role = data.role
+        this.firstName = data.firstName
+        this.lastName = data.lastName
+        this.email = data.email
     }
 
-    login(username,password){
+    login(username, password) {
 
     }
 }

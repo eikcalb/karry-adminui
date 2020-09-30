@@ -1,9 +1,10 @@
 import React, { useContext } from 'react'
 import { MdLocationOn } from "react-icons/md";
+import { VIEW_CONTEXT } from '../lib';
 
 export default function ({ routes }: { routes: any[] }) {
-// const ctx = useContext(APPLICATION_CONTEXT)
-//TODO: implement map view
+    // const ctx = useContext(APPLICATION_CONTEXT)
+    const viewCTX = useContext(VIEW_CONTEXT)
 
     return (
         <div className='container'>
@@ -15,7 +16,10 @@ export default function ({ routes }: { routes: any[] }) {
                                 <div className=''>{r.name}</div>
                             </div>
                             <div className='card-footer'>
-                                <span className='card-footer-item button is-inverted is-dark' title='Set pickup location'>
+                                <span onClick={() => {
+                                    viewCTX.setLoading(true)
+                                    setTimeout(()=>viewCTX.setLoading(false), 1000)
+                                }} className='card-footer-item button is-inverted is-dark' title='Set pickup location'>
                                     <MdLocationOn className='has-text-danger' /> &nbsp;PICK ME UP HERE
                         </span>
                             </div>

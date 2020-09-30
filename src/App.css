@@ -20,3 +20,7 @@
 .is-fullheight {
     min-height: 100%;
 }
+
+.has-radius {
+    border-radius: .8rem;
+}

@@ -5,7 +5,9 @@ import { APPLICATION_CONTEXT, DEFAULT_APPLICATION, VIEW_CONTEXT } from './lib';
 import Toolbar from "./components/toolbar";
 import { Body } from './components/body';
 import { User } from './lib/user';
+import { ToastProvider } from 'react-toast-notifications';
 
+const AUTO_HIDE_TOAST_TIMEOUT = 4000;
 
 interface AppState {
   ready: boolean,
@@ -29,16 +31,24 @@ function App() {
   }
 
   useEffect(() => {
-    DEFAULT_APPLICATION.ready.then(() => setState({ ...state, ready: true }))
+    DEFAULT_APPLICATION.ready.then(() => {
+      if (DEFAULT_APPLICATION.signedIn()) {
+        setState({ ...state, user: DEFAULT_APPLICATION.user as User, ready: true })
+      } else {
+        setState({ ...state, ready: true })
+      }
+    })
   }, [])
 
   return (
-    <APPLICATION_CONTEXT.Provider value={DEFAULT_APPLICATION}>
-      <VIEW_CONTEXT.Provider value={viewContext}>
-        <Toolbar />
-        <Body showLoading={!state.ready || state.loading} />
-      </VIEW_CONTEXT.Provider>
-    </APPLICATION_CONTEXT.Provider >
+    <ToastProvider autoDismiss autoDismissTimeout={AUTO_HIDE_TOAST_TIMEOUT} placement='bottom-center'>
+      <APPLICATION_CONTEXT.Provider value={DEFAULT_APPLICATION}>
+        <VIEW_CONTEXT.Provider value={viewContext}>
+          <Toolbar hidden={!state.ready} />
+          <Body showLoading={!state.ready || state.loading} />
+        </VIEW_CONTEXT.Provider>
+      </APPLICATION_CONTEXT.Provider>
+    </ToastProvider>
   )
 }
 

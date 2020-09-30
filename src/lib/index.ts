@@ -1,19 +1,32 @@
 import { createContext } from "react";
 import { User } from "./user";
+import { IConfig, DEFAULT_CONFIG } from "./config";
+import validator from "validator";
+import * as localforage from "localforage";
+import { storageKeys } from "./util";
 
 export class Application {
     ready: Promise<boolean>
     name = "Karry Admin"
     version = "1.0"
 
+    protected config: IConfig
     public user?: User
 
-    constructor() {
+    constructor(config) {
+        this.config = config
         this.ready = new Promise(async (res, rej) => {
             try {
                 // handle app initialization here
                 await this.init()
-                setTimeout(() => res(true), 10000)
+
+                // check for existing user session
+                try {
+                    await this.inflateUser()
+                } catch (e) {
+                    console.log(e)
+                }
+                res(true)
             } catch (e) {
                 console.log(e)
                 rej(e)
@@ -22,13 +35,193 @@ export class Application {
     }
 
     protected async init() {
+        // initialize storage
+        localforage.config({
+            driver: [
+                localforage.INDEXEDDB,
+                localforage.LOCALSTORAGE,
+                localforage.WEBSQL
+            ],
+            name: `${this.name} v${this.version}`,
+            version: 1,
+            storeName: 'adminstore',
+            description: ''
+        })
+        await localforage.ready()
+    }
 
+    async initiateNetworkRequest(url: string, request?: RequestInit): Promise<Response> {
+        const resp = await fetch(url, request)
+        if (resp.status === 401) {
+            if (!this.user) {
+                throw new Error("Unauthenticated access not allowed!")
+            }
+            // Authorization failed. This usually means the token has expired and refresh token could not be used to regenerate token
+            //
+            // Try to reauthenticate the user
+            try {
+                const { token } = await this.reauthenticate()
+                this.user.token = token
+                // since token is generated already, retry the request
+                if (request && request.headers && request.headers['x-access-token']) {
+                    request.headers['x-access-token'] = token
+                }
+                return await this.initiateNetworkRequest(url, request)
+            } catch (e) {
+                await this.logout()
+                throw e || new Error("App session expired. Login to continue!")
+            }
+        }
+        return resp
+    }
+
+    protected async reauthenticate(): Promise<{ token: string }> {
+        try {
+            const refToken = await localforage.getItem(storageKeys.REFRESH_TOKEN)
+            if (!refToken) {
+                throw new Error("Cannot refresh session. You must login to continue!")
+            }
+            const response = await this.initiateNetworkRequest(`${this.config.hostname}/admin/persons/refresh`, {
+                method: 'POST',
+                referrerPolicy: "no-referrer",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ token: refToken })
+            })
+
+            if (!response.ok) {
+                throw new Error((await response.json()).error)
+            }
+
+            const jsonResponse = await response.json()
+            await localforage.setItem(storageKeys.REFRESH_TOKEN, jsonResponse.refreshToken)
+            delete jsonResponse.refreshToken
+            return jsonResponse
+        } catch (e) {
+            console.log(e)
+            throw e
+        }
+    }
+
+    protected async inflateUser() {
+        // inflate user session
+        let session: User | null = await localforage.getItem(storageKeys.USER_SESSION)
+        if (!session) throw new Error("No session available for user!")
+
+        this.user = new User(session)
+        return this.user
+    }
+
+    protected async persistUser() {
+        if (!this.user) {
+            throw new Error('No user created!')
+        }
+
+        await localforage.setItem(storageKeys.USER_SESSION, this.user)
     }
 
     signedIn() {
         return this.user
     }
 
+    async login(username, password) {
+        try {
+            await this.validateLogin(username, password)
+
+            const response = await this.initiateNetworkRequest(`${this.config.hostname}/api/persons/login`, {
+                method: 'POST',
+                referrerPolicy: "no-referrer",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ email: username, password })
+            })
+            if (!response.ok) {
+                throw new Error((await response.json()).error)
+            }
+
+            const jsonResponse = await response.json()
+            await localforage.setItem(storageKeys.REFRESH_TOKEN, jsonResponse.refreshToken)
+            delete jsonResponse.refreshToken
+
+            this.user = new User(jsonResponse)
+            await this.persistUser()
+
+            return this.user
+
+        } catch (e) {
+            throw e
+        }
+    }
+
+    protected async validateLogin(username: string, passowrd: string) {
+        if (!username || !passowrd) {
+            throw new Error("Credentials not provided!")
+        }
+        username = username.trim()
+
+        if (!username || !validator.isEmail(username)) {
+            throw new Error("Invalid username provided!")
+        }
+        if (!validator.matches(passowrd, /[a-zA-z0-9]{6,}/i)) {
+            throw new Error("Invalid password provided (Password must be alphanumeric and more than 6 characters)!")
+        }
+    }
+
+
+    async addAdmin(data) {
+        try {
+            await this.validateRegister(data)
+
+            const response = await this.initiateNetworkRequest(`${this.config.hostname}/api/persons/new`, {
+                method: 'POST',
+                referrerPolicy: "no-referrer",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            if (!response.ok) {
+                throw new Error((await response.json()).error)
+            }
+
+            const jsonResponse = await response.json()
+            const user = new User(jsonResponse)
+
+            return user
+
+        } catch (e) {
+            throw e
+        }
+    }
+
+    protected async validateRegister(data) {
+        let { username, passowrd, firstName, lastName } = data
+        if (!username || !passowrd) {
+            throw new Error("Credentials not provided!")
+        }
+        username = username.trim()
+        firstName = firstName.trim()
+        lastName = lastName.trim()
+        if (!firstName || !lastName) {
+            throw new Error('Firstname and lastname must be provided!')
+        }
+        if (!username || !validator.isEmail(username)) {
+            throw new Error("Invalid username provided!")
+        }
+        if (!validator.matches(passowrd, /[a-zA-z0-9]{6,}/i)) {
+            throw new Error("Invalid password provided (Password must be alphanumeric and more than 6 characters)!")
+        }
+    }
+
+    async logout() {
+        this.user = undefined
+        localforage.removeItem(storageKeys.USER_SESSION)
+    }
 }
 
 export const MOCK_DATA = {
@@ -45,7 +238,7 @@ export const MOCK_DATA = {
     }
 }
 
-export const DEFAULT_APPLICATION = new Application()
+export const DEFAULT_APPLICATION = new Application(DEFAULT_CONFIG)
 
 /**
  * This is the application context used within the web application.
@@ -68,9 +261,9 @@ export const APPLICATION_CONTEXT = createContext<Application>(DEFAULT_APPLICATIO
 export const VIEW_CONTEXT = createContext<{
     signedIn: null | User,
     setSignedInUser: (user) => any,
-    setLoading:(loading:boolean)=>any
+    setLoading: (loading: boolean) => any
 }>({
     signedIn: null,
     setSignedInUser: () => { },
-    setLoading:()=>{}
+    setLoading: () => { }
 })
