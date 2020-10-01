@@ -13,8 +13,10 @@ export function AddAdmin() {
         username: '',
         firstName: '',
         lastName: '',
+        creatorPassword: '',
         showPassword: false,
-        showVerifyPassword: false
+        showVerifyPassword: false,
+        showCreatorPassword: false
     })
 
     const { addToast } = useToasts()
@@ -39,14 +41,27 @@ export function AddAdmin() {
         setState({ ...state, passwordVerify: e.target.value })
     }, [state])
 
+    const onCreatorPasswordChange = useCallback((e) => {
+        setState({ ...state, creatorPassword: e.target.value })
+    }, [state])
+
+
     const onSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         e.stopPropagation()
 
         try {
             setState({ ...state, loading: true })
-            const user = await ctx.addAdmin(state)
-
+            const { username, password, passwordVerify, firstName, lastName, creatorPassword } = state
+            const user = await ctx.addAdmin({
+                email: username,
+                firstName,
+                lastName,
+                password,
+                passwordVerify,
+                creatorPassword
+            })
+            console.log(user, ':admin created')
             setState({ ...state, loading: false })
             addToast('Successfully created admin!', {
                 appearance: 'success',
@@ -64,6 +79,9 @@ export function AddAdmin() {
     }, [state])
     const toggleShowVerifyPassword = useCallback(() => {
         setState((state) => ({ ...state, showVerifyPassword: !state.showVerifyPassword }))
+    }, [state])
+    const toggleShowCreatorPassword = useCallback(() => {
+        setState((state) => ({ ...state, showCreatorPassword: !state.showCreatorPassword }))
     }, [state])
 
     return (
@@ -117,7 +135,7 @@ export function AddAdmin() {
 
                         <div className='field has-addons'>
                             <div className='control has-icons-left is-expanded'>
-                                <input disabled={state.loading} onChange={onVerifyPasswordChange} required value={state.passwordVerify} placeholder='verify password' className='input' type={state.showPassword ? 'text' : 'password'} />
+                                <input disabled={state.loading} onChange={onVerifyPasswordChange} required value={state.passwordVerify} placeholder='verify password' className='input' type={state.showVerifyPassword ? 'text' : 'password'} />
                                 <span className='icon is-left is-small'><FaKey /></span>
                             </div>
                             <div className='control'>
@@ -125,6 +143,18 @@ export function AddAdmin() {
                                 </button>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <p className='help is-danger is-uppercase mt-6 has-text-weight-bold'>Enter your admin password to confirm</p>
+                <div className='field has-addons'>
+                    <div className='control has-icons-left is-expanded'>
+                        <input disabled={state.loading} onChange={onCreatorPasswordChange} required value={state.creatorPassword} placeholder='confirm admin password' className='input' type={state.showCreatorPassword ? 'text' : 'password'} />
+                        <span className='icon is-left is-small'><FaKey /></span>
+                    </div>
+                    <div className='control'>
+                        <button className='button' type='button' onClick={toggleShowCreatorPassword}>{state.showCreatorPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
                     </div>
                 </div>
 

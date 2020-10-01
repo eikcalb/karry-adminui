@@ -9,12 +9,12 @@ import { AddAdmin } from '../components/form';
 
 const numberFormatter = Intl.NumberFormat()
 
-function ItemCount({ name, value }) {
+function ItemCount({ name, value, loading=false }) {
     return (
         <div className='level-item has-text-centered'>
             <div>
                 <p className='heading'>{name}</p>
-                <p className='title'>{numberFormatter.format(value)}</p>
+                {loading ? (<button className='button is-white is-loading'></button>) : <p className='title'>{numberFormatter.format(value)}</p>}
             </div>
         </div>
     )

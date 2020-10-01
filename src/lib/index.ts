@@ -13,6 +13,8 @@ export class Application {
     protected config: IConfig
     public user?: User
 
+    logoutListener
+
     constructor(config) {
         this.config = config
         this.ready = new Promise(async (res, rej) => {
@@ -130,7 +132,7 @@ export class Application {
         try {
             await this.validateLogin(username, password)
 
-            const response = await this.initiateNetworkRequest(`${this.config.hostname}/api/persons/login`, {
+            const response = await this.initiateNetworkRequest(`${this.config.hostname}/admin/persons/login`, {
                 method: 'POST',
                 referrerPolicy: "no-referrer",
                 headers: {
@@ -146,7 +148,6 @@ export class Application {
             const jsonResponse = await response.json()
             await localforage.setItem(storageKeys.REFRESH_TOKEN, jsonResponse.refreshToken)
             delete jsonResponse.refreshToken
-
             this.user = new User(jsonResponse)
             await this.persistUser()
 
@@ -176,12 +177,13 @@ export class Application {
         try {
             await this.validateRegister(data)
 
-            const response = await this.initiateNetworkRequest(`${this.config.hostname}/api/persons/new`, {
+            const response = await this.initiateNetworkRequest(`${this.config.hostname}/admin/persons/new`, {
                 method: 'POST',
                 referrerPolicy: "no-referrer",
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'x-access-token': `${this.user?.token}`
                 },
                 body: JSON.stringify(data)
             })
@@ -200,20 +202,23 @@ export class Application {
     }
 
     protected async validateRegister(data) {
-        let { username, passowrd, firstName, lastName } = data
-        if (!username || !passowrd) {
+        let { email, password, firstName, lastName, passwordVerify } = data
+        if (!email || !password) {
             throw new Error("Credentials not provided!")
         }
-        username = username.trim()
+        if (password !== passwordVerify) {
+            throw new Error('Passwords do not match!')
+        }
+        email = email.trim()
         firstName = firstName.trim()
         lastName = lastName.trim()
         if (!firstName || !lastName) {
             throw new Error('Firstname and lastname must be provided!')
         }
-        if (!username || !validator.isEmail(username)) {
+        if (!email || !validator.isEmail(email)) {
             throw new Error("Invalid username provided!")
         }
-        if (!validator.matches(passowrd, /[a-zA-z0-9]{6,}/i)) {
+        if (!validator.matches(password, /[a-zA-z0-9]{6,}/i)) {
             throw new Error("Invalid password provided (Password must be alphanumeric and more than 6 characters)!")
         }
     }
@@ -221,6 +226,10 @@ export class Application {
     async logout() {
         this.user = undefined
         localforage.removeItem(storageKeys.USER_SESSION)
+        localforage.removeItem(storageKeys.REFRESH_TOKEN)
+        if (this.logoutListener) {
+            this.logoutListener()
+        }
     }
 }
 
@@ -259,11 +268,11 @@ export const APPLICATION_CONTEXT = createContext<Application>(DEFAULT_APPLICATIO
  * Activities such as loading and splashscreen are implemented using this context.
  */
 export const VIEW_CONTEXT = createContext<{
-    signedIn: null | User,
+    signedIn: undefined | User,
     setSignedInUser: (user) => any,
     setLoading: (loading: boolean) => any
 }>({
-    signedIn: null,
+    signedIn: undefined,
     setSignedInUser: () => { },
     setLoading: () => { }
 })

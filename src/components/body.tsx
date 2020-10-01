@@ -44,9 +44,9 @@ export const Body = ({ showLoading }: { showLoading?: boolean }) => {
                     <Register />
                 </Route>
 
-                <AuthGuard path={links.logout} exact>
+                <Route path={links.logout} exact>
                     <Logout />
-                </AuthGuard>
+                </Route>
 
                 <AuthGuard path={links.dashboard}>
                     <Dashboard />

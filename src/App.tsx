@@ -11,7 +11,6 @@ const AUTO_HIDE_TOAST_TIMEOUT = 4000;
 
 interface AppState {
   ready: boolean,
-  user: User | null,
   loading: boolean
 }
 /**
@@ -20,28 +19,31 @@ interface AppState {
 function App() {
   const [state, setState] = useState<AppState>({
     ready: false,
-    user: null,
     loading: false
   })
+  const [signedIn, setSignedInUser] = useState<User | undefined>(undefined)
 
   const viewContext = {
-    setSignedInUser: (user: User) => setState({ ...state, user }),
-    signedIn: state.user,
+    setSignedInUser,
+    signedIn,
     setLoading: (loading) => setState({ ...state, loading })
   }
 
   useEffect(() => {
     DEFAULT_APPLICATION.ready.then(() => {
       if (DEFAULT_APPLICATION.signedIn()) {
-        setState({ ...state, user: DEFAULT_APPLICATION.user as User, ready: true })
+        setSignedInUser(DEFAULT_APPLICATION.user)
       } else {
-        setState({ ...state, ready: true })
+        setSignedInUser(undefined)
       }
+      setState({ ...state, ready: true })
+    }).finally(() => {
+      DEFAULT_APPLICATION.logoutListener = () => viewContext.setSignedInUser(undefined)
     })
   }, [])
 
   return (
-    <ToastProvider autoDismiss autoDismissTimeout={AUTO_HIDE_TOAST_TIMEOUT} placement='bottom-center'>
+    <ToastProvider autoDismiss autoDismissTimeout={AUTO_HIDE_TOAST_TIMEOUT} placement='top-center'>
       <APPLICATION_CONTEXT.Provider value={DEFAULT_APPLICATION}>
         <VIEW_CONTEXT.Provider value={viewContext}>
           <Toolbar hidden={!state.ready} />

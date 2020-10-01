@@ -11,17 +11,18 @@ import { useToasts } from 'react-toast-notifications';
 export function Logout() {
     const ctx = useContext(APPLICATION_CONTEXT)
     const viewCTX = useContext(VIEW_CONTEXT)
-    const [logoutSuccess, setSuccess] = useState(false)
 
     useEffect(() => {
-        ctx.logout().then(async () => {
-            viewCTX.setSignedInUser(false)
-            setSuccess(true)
-            return
-        })
+        ctx.logout()
     }, [])
 
+    if (!viewCTX.signedIn) {
+        return <Redirect to={{ pathname: '/' }} />
+    }
+
+  
+
     return (
-        !logoutSuccess ? <BodyFragment loading /> : <Redirect to={{ pathname: '/' }} />
+        viewCTX.signedIn ? <BodyFragment loading /> : <Redirect to={{ pathname: '/' }} />
     )
 }
