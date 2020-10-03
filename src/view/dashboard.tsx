@@ -1,15 +1,16 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BodyFragment } from '../components/body';
 import Map from "../components/map";
 import { MOCK_DATA, APPLICATION_CONTEXT } from '../lib';
 import { MdAddCircle } from 'react-icons/md';
 import { Modal } from '../components/modal';
 import { FaRegUserCircle, FaUserLock } from 'react-icons/fa';
-import { AddAdmin } from '../components/form';
+import { AddAdmin } from '../components/misc';
+import { Stat } from '../lib/stat';
 
 const numberFormatter = Intl.NumberFormat()
 
-function ItemCount({ name, value, loading=false }) {
+function ItemCount({ name, value, loading = false }) {
     return (
         <div className='level-item has-text-centered'>
             <div>
@@ -22,17 +23,25 @@ function ItemCount({ name, value, loading=false }) {
 
 export function Dashboard() {
     const ctx = useContext(APPLICATION_CONTEXT)
-    const [state, setState] = useState({ showAdminModal: false })
+    const [state, setState] = useState({ showAdminModal: false, loadingStat: true, users: 0, teams: 0, ads: 0, posts: 0 })
+
+    useEffect(() => {
+        Stat.getCount(ctx).then(async ({ ads, posts, teams, users }) => {
+            setState({ ...state, loadingStat: false, ads, posts, teams, users })
+        }).catch(e => {
+            setState({ ...state, loadingStat: false })
+        })
+    }, [])
 
     return (
         <BodyFragment>
             <div className='container is-fluid is-fullheight'>
                 <div className='section my-4'>
                     <div className='level'>
-                        <ItemCount name='Users Count' value={300} />
-                        <ItemCount name='Total Teams' value={3000} />
-                        <ItemCount name='Total Ads' value={1200} />
-                        <ItemCount name='Posts Count' value={3889000} />
+                        <ItemCount name='Users Count' value={state.users} loading={state.loadingStat} />
+                        <ItemCount name='Total Teams' value={state.teams} loading={state.loadingStat} />
+                        <ItemCount name='Total Ads' value={state.ads} loading={state.loadingStat} />
+                        <ItemCount name='Posts Count' value={state.posts} loading={state.loadingStat} />
                     </div>
 
                     <div className='mt-6 columns is-multiline is-vcentered is-flex-centered'>

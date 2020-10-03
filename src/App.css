@@ -24,3 +24,11 @@
 .has-radius {
     border-radius: .8rem;
 }
+
+.is-hoverable-card {
+    transition: box-shadow 0.2s linear;
+}
+
+.is-hoverable-card:hover {
+    box-shadow: 0 0.5em 1em 0.08em rgba(0, 0, 0, 0.2)
+}

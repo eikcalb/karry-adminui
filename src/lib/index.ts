@@ -52,8 +52,8 @@ export class Application {
         await localforage.ready()
     }
 
-    async initiateNetworkRequest(url: string, request?: RequestInit): Promise<Response> {
-        const resp = await fetch(url, request)
+    async initiateNetworkRequest(path: string, request?: RequestInit): Promise<Response> {
+        const resp = await fetch(`${this.config.hostname}${path}`, request)
         if (resp.status === 401) {
             if (!this.user) {
                 throw new Error("Unauthenticated access not allowed!")
@@ -68,7 +68,7 @@ export class Application {
                 if (request && request.headers && request.headers['x-access-token']) {
                     request.headers['x-access-token'] = token
                 }
-                return await this.initiateNetworkRequest(url, request)
+                return await this.initiateNetworkRequest(path, request)
             } catch (e) {
                 await this.logout()
                 throw e || new Error("App session expired. Login to continue!")
@@ -83,7 +83,7 @@ export class Application {
             if (!refToken) {
                 throw new Error("Cannot refresh session. You must login to continue!")
             }
-            const response = await this.initiateNetworkRequest(`${this.config.hostname}/admin/persons/refresh`, {
+            const response = await this.initiateNetworkRequest('/admin/persons/refresh', {
                 method: 'POST',
                 referrerPolicy: "no-referrer",
                 headers: {
@@ -132,7 +132,7 @@ export class Application {
         try {
             await this.validateLogin(username, password)
 
-            const response = await this.initiateNetworkRequest(`${this.config.hostname}/admin/persons/login`, {
+            const response = await this.initiateNetworkRequest('/admin/persons/login', {
                 method: 'POST',
                 referrerPolicy: "no-referrer",
                 headers: {
@@ -177,7 +177,7 @@ export class Application {
         try {
             await this.validateRegister(data)
 
-            const response = await this.initiateNetworkRequest(`${this.config.hostname}/admin/persons/new`, {
+            const response = await this.initiateNetworkRequest('/admin/persons/new', {
                 method: 'POST',
                 referrerPolicy: "no-referrer",
                 headers: {

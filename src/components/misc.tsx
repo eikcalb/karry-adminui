@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useContext } from "react";
-import { FaRegUserCircle, FaUserLock, FaKey, FaEyeSlash, FaEye, FaUserTie, FaAd, FaPlusCircle } from "react-icons/fa";
+import { FaRegUserCircle, FaUserLock, FaKey, FaEyeSlash, FaEye, FaUserTie, FaAd, FaPlusCircle, FaExclamationTriangle } from "react-icons/fa";
 import { useToasts } from "react-toast-notifications";
 import { APPLICATION_CONTEXT } from "../lib";
 
@@ -164,5 +164,16 @@ export function AddAdmin() {
             </div>
         </form>
 
+    )
+}
+
+export function EmptyComponent({ icon = <FaExclamationTriangle />, message = "No data available!" }) {
+    return (
+        <div className='card has-radius'>
+            <div className='card-content'>
+                <span className='is-size-1 has-text-danger block'>{icon}</span>
+                <p className='is-uppercase has-text-weight-bold is-size-7'>{message}</p>
+            </div>
+        </div>
     )
 }
