@@ -59,7 +59,7 @@ export function UserDetails({ user: userProp, onCancel }: { user: User, onCancel
 
             const user = await User.updateUser(ctx, userProp.id, update)
             setState({ ...state, user: { ...state.user, ...update }, showEdit: false, loading: false })
-            addToast('Successfully created user!', {
+            addToast('Successfully updated user!', {
                 appearance: 'success',
             })
         } catch (e) {
@@ -157,9 +157,9 @@ export function UserDetails({ user: userProp, onCancel }: { user: User, onCancel
 
                             <div className='field'>
                                 <div className='control has-icons-left'>
-                                    <input disabled={state.loading} required className='input' onChange={onCountryChange} value={state.country} type='mail' placeholder='enter email...' />
+                                    <input disabled={state.loading} required className='input' onChange={onCountryChange} value={state.country} type='text' placeholder='enter country...' />
                                     <span className='icon is-small is-left'>
-                                        <FaEnvelope />
+                                        <FaGlobe />
                                     </span>
                                 </div>
                             </div>

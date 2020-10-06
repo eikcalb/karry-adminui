@@ -10,6 +10,7 @@ import { Register } from "../view/register";
 import { AuthGuard } from "./guard";
 import { Dashboard } from "../view/dashboard";
 import { Users } from "../view/users";
+import { Posts } from "../view/posts";
 
 
 const Loading = () => {
@@ -54,6 +55,9 @@ export const Body = ({ showLoading }: { showLoading?: boolean }) => {
                 </AuthGuard>
                 <AuthGuard path={links.users}>
                     <Users />
+                </AuthGuard>
+                <AuthGuard path={links.posts}>
+                    <Posts />
                 </AuthGuard>
 
                 <Route path={'/'} strict={false} exact={true}>
