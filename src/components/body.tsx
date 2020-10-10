@@ -59,10 +59,7 @@ export const Body = ({ showLoading }: { showLoading?: boolean }) => {
                 <AuthGuard path={links.posts}>
                     <Posts />
                 </AuthGuard>
-
-                <Route path={'/'} strict={false} exact={true}>
-                    {ctx.signedIn() && viewCTX.signedIn ? <Redirect to={links.dashboard} /> : <Redirect to={links.login} />}
-                </Route>
+ 
 
 
                 <Route >

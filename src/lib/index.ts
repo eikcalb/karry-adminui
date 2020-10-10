@@ -158,8 +158,8 @@ export class Application {
         }
     }
 
-    protected async validateLogin(username: string, passowrd: string) {
-        if (!username || !passowrd) {
+    protected async validateLogin(username: string, password: string) {
+        if (!username || !password) {
             throw new Error("Credentials not provided!")
         }
         username = username.trim()
@@ -167,7 +167,7 @@ export class Application {
         if (!username || !validator.isEmail(username)) {
             throw new Error("Invalid username provided!")
         }
-        if (!validator.matches(passowrd, /[a-zA-z0-9]{6,}/i)) {
+        if (!validator.matches(password, /[a-zA-z0-9]{6,}/i)) {
             throw new Error("Invalid password provided (Password must be alphanumeric and more than 6 characters)!")
         }
     }
