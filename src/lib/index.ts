@@ -53,6 +53,10 @@ export class Application {
     }
 
     async initiateNetworkRequest(path: string, request?: RequestInit): Promise<Response> {
+        request = {
+            ...request,
+            mode: 'cors'
+        }
         const resp = await fetch(`${this.config.hostname}${path}`, request)
         if (resp.status === 401) {
             if (!this.user) {

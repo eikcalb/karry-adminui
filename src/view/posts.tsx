@@ -93,8 +93,7 @@ export function Posts() {
             setState({ ...state, loadingMore: false, posts })
         }).catch(e => {
             console.log(e)
-            setState({ ...state, loadingMore: true })
-
+            setState({ ...state, loadingMore: false })
             addToast("Failed to load new data!", {
                 appearance: 'error'
             })

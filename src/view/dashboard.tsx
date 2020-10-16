@@ -38,10 +38,10 @@ export function Dashboard() {
             <div className='container is-fluid is-fullheight'>
                 <div className='section my-4'>
                     <div className='level'>
-                        <ItemCount name='Users Count' value={state.users} loading={state.loadingStat} />
+                        <ItemCount name='Total Users' value={state.users} loading={state.loadingStat} />
                         <ItemCount name='Total Teams' value={state.teams} loading={state.loadingStat} />
                         <ItemCount name='Total Ads' value={state.ads} loading={state.loadingStat} />
-                        <ItemCount name='Posts Count' value={state.posts} loading={state.loadingStat} />
+                        <ItemCount name='Total Posts' value={state.posts} loading={state.loadingStat} />
                     </div>
 
                     <div className='mt-6 columns is-multiline is-vcentered is-flex-centered'>

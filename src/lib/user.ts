@@ -84,4 +84,27 @@ export class User {
             throw e
         }
     }
+
+
+    static async warnUser(app: Application, userID, message, postID: string) {
+        try {
+            const response = await app.initiateNetworkRequest(`/admin/persons/persons/flag/${userID}`, {
+                method: 'POST',
+                referrerPolicy: "no-referrer",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'x-access-token': `${app.user?.token}`,
+                },
+                body: JSON.stringify({ message, postID })
+            })
+            if (!response.ok) {
+                throw new Error((await response.json()).error)
+            }
+
+            return await response.json()
+        } catch (e) {
+            throw e
+        }
+    }
 }

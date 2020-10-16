@@ -12,11 +12,9 @@ import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ToastProvider autoDismiss={500} placement='bottom-center'>
-      <BrowserRouter>
-          <App />
-      </BrowserRouter>
-    </ToastProvider>
+    <BrowserRouter basename='/karry-adminui'>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

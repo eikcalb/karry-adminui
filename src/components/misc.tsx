@@ -167,9 +167,9 @@ export function AddAdmin() {
     )
 }
 
-export function EmptyComponent({ icon = <FaExclamationTriangle />, message = "No data available!" }) {
+export function EmptyComponent({ icon = <FaExclamationTriangle />, message = "No data available!", shadow = true }) {
     return (
-        <div className='card has-radius'>
+        <div className={`card has-radius ${shadow ? '' : 'is-shadowless'}`}>
             <div className='card-content'>
                 <span className='is-size-1 has-text-danger block'>{icon}</span>
                 <p className='is-uppercase has-text-weight-bold is-size-7'>{message}</p>

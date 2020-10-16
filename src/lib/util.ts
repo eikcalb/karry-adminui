@@ -5,10 +5,14 @@ export const links = {
     posts: '/posts',
     dashboard: '/dashboard',
     login: '/login',
-    register: '/register'
+    register: '/register',
+    root: '/',
+    reports: '/posts/reports/:id',
+    _reports: '/posts/reports/'
+
 }
 
 export const storageKeys = {
     USER_SESSION: 'app.user.session',
-    REFRESH_TOKEN:'app.token.refresh'
+    REFRESH_TOKEN: 'app.token.refresh'
 }

@@ -4,5 +4,5 @@ export interface IConfig {
 
 
 export const DEFAULT_CONFIG: IConfig = {
-    hostname: 'http://localhost:80'
+    hostname: 'http://ec2-54-89-250-240.compute-1.amazonaws.com:80'
 }

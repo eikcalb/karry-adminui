@@ -21,7 +21,7 @@ export default function Toolbar({ hidden = false }) {
     return (
         <nav className={`navbar ${hidden ? 'is-hidden' : ''}`} role='navigation' style={STYLES.toolbar}>
             <div className='navbar-brand'>
-                <div className='navbar-items is-flex-centered'>
+                <div className='navbar-items is-flex-centered is-uppercase has-text-weight-bold px-4 py-2'>
                     {ctx.name}
                 </div>
                 <div role="button" className={`navbar-burger burger ${state.showMenu ? 'is-active' : ''}`} aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onClick={() => {
@@ -55,8 +55,10 @@ export default function Toolbar({ hidden = false }) {
                                     <FaUserCircle />&nbsp; {ctx.user?.firstName}
                                 </div>
                                 <div className='navbar-dropdown is-right'>
-                                    <Link className='navbar-item is-flex-centered' to={links.settings}><FaCog />&nbsp; Settings</Link>
-                                    <hr className='navbar-divider' />
+                                    {/*
+                                     <Link className='navbar-item is-flex-centered' to={links.settings}><FaCog />&nbsp; Settings</Link>
+                                    <hr className='navbar-divider' /> 
+                                    */}
                                     <Link className='navbar-item is-flex-centered' to={links.logout}><FaSignOutAlt />&nbsp; Logout</Link>
                                 </div>
                             </div>
