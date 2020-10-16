@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/karry-adminui/static/css/main.8c44a825.chunk.css",
-    "main.js": "/karry-adminui/static/js/main.0b4e298d.chunk.js",
-    "main.js.map": "/karry-adminui/static/js/main.0b4e298d.chunk.js.map",
+    "main.js": "/karry-adminui/static/js/main.8fb68681.chunk.js",
+    "main.js.map": "/karry-adminui/static/js/main.8fb68681.chunk.js.map",
     "runtime-main.js": "/karry-adminui/static/js/runtime-main.39a43be2.js",
     "runtime-main.js.map": "/karry-adminui/static/js/runtime-main.39a43be2.js.map",
     "static/css/2.ba242066.chunk.css": "/karry-adminui/static/css/2.ba242066.chunk.css",
     "static/js/2.03f9f482.chunk.js": "/karry-adminui/static/js/2.03f9f482.chunk.js",
     "static/js/2.03f9f482.chunk.js.map": "/karry-adminui/static/js/2.03f9f482.chunk.js.map",
     "index.html": "/karry-adminui/index.html",
-    "precache-manifest.190d4cf583315e4ee56d50035b5aa0dd.js": "/karry-adminui/precache-manifest.190d4cf583315e4ee56d50035b5aa0dd.js",
+    "precache-manifest.796131e2fe822c8973181b7ecb27ffad.js": "/karry-adminui/precache-manifest.796131e2fe822c8973181b7ecb27ffad.js",
     "service-worker.js": "/karry-adminui/service-worker.js",
     "static/css/2.ba242066.chunk.css.map": "/karry-adminui/static/css/2.ba242066.chunk.css.map",
     "static/css/main.8c44a825.chunk.css.map": "/karry-adminui/static/css/main.8c44a825.chunk.css.map",
@@ -21,6 +21,6 @@
     "static/css/2.ba242066.chunk.css",
     "static/js/2.03f9f482.chunk.js",
     "static/css/main.8c44a825.chunk.css",
-    "static/js/main.0b4e298d.chunk.js"
+    "static/js/main.8fb68681.chunk.js"
   ]
 }
