@@ -22,7 +22,7 @@ function Item({ user, onClick }: { user: User, onClick?: any }) {
                         <img className='is-rounded' style={{ height: '100%' }} src={user.profileImageURL} />
                     </figure>
                     <div className='block'>
-                        <p style={{ textOverflow: 'ellipsis' }} className='is-clipped is-size-6 has-text-weight-bold is-capitalized'>{`${user.firstName} ${user.lastName}`}</p>
+                        <p style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} className='is-clipped is-size-6 has-text-weight-bold is-capitalized'>{`${user.firstName} ${user.lastName}`}</p>
                     </div>
                 </div>
             </div>

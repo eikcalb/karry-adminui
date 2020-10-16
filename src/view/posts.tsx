@@ -26,7 +26,7 @@ function Item({ post, onClick }: { post: Post, onClick?: any }) {
                         <img src={post.thumbnailURL} />
                     </figure>
                     <div className='px-2 py-2'>
-                        <p style={{ textOverflow: 'ellipsis' }} className='block is-clipped is-size-5 has-text-centered has-text-weight-bold is-capitalized'>{post.title}</p>
+                        <p style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} className='block is-clipped is-size-5 has-text-centered has-text-weight-bold is-capitalized'>{post.title}</p>
                         <div className='columns is-vcentered is-mobile'>
                             <div className='column is-narrow'>
                                 <figure className='image is-32x32' style={{ margin: 'auto' }}>
