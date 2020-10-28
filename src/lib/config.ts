@@ -4,5 +4,5 @@ export interface IConfig {
 
 
 export const DEFAULT_CONFIG: IConfig = {
-    hostname: 'http://ec2-54-89-250-240.compute-1.amazonaws.com:80'
+    hostname: 'https://karry-esports-app-dev.herokuapp.com:80'
 }
