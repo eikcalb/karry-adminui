@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/karry-adminui/precache-manifest.f47ee1a0a0a66801ea76d8e5e9f9e3df.js"
+  "/karry-adminui/precache-manifest.edd830df080feb142abf07109ea60664.js"
 );
 
 self.addEventListener('message', (event) => {
