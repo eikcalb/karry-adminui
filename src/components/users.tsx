@@ -177,12 +177,12 @@ export function UserDetails({ user: userProp, onCancel }: { user: User, onCancel
                 ) : (
                         <>
                             <div className='mb-6 block'>
-                            <p className='is-capitalized has-text-grey-light has-text-centered'><FaClock />&nbsp; Created {createdAt.fromNow()}</p>
+                                <p className='is-capitalized has-text-grey-light has-text-centered'><FaClock />&nbsp; Created {createdAt.fromNow()}</p>
                                 <div className='columns mt-4 is-multiline'>
                                     <p className='is-capitalized column is-6'><FaUserCircle />&nbsp; {`${user.firstName} ${user.lastName}`}</p>
                                     <p className='is-lowercase column is-6'><FaEnvelope />&nbsp; {user.email}</p>
 
-                                    <p className='is-capitalized column is-6'><FaPhoneAlt />&nbsp; {user.phone}</p>
+                                    <p className='is-capitalized column is-6'><FaPhoneAlt />&nbsp; {user.phone || <span className='has-text-grey is-size-6 is-uppercase'>Not set!</span>}</p>
                                     <p className='is-capitalized column is-6'><FaGlobe />&nbsp; {user.country}</p>
                                 </div>
                             </div>

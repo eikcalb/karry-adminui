@@ -1,7 +1,8 @@
-import React, { useState, useCallback, useContext } from "react";
-import { FaRegUserCircle, FaUserLock, FaKey, FaEyeSlash, FaEye, FaUserTie, FaAd, FaPlusCircle, FaExclamationTriangle } from "react-icons/fa";
+import React, { useState, useCallback, useContext, useRef } from "react";
+import { FaRegUserCircle, FaUserLock, FaKey, FaEyeSlash, FaEye, FaUserTie, FaAd, FaPlusCircle, FaExclamationTriangle, FaUniversity, FaCloudUploadAlt } from "react-icons/fa";
 import { useToasts } from "react-toast-notifications";
 import { APPLICATION_CONTEXT } from "../lib";
+import { University } from "../lib/university";
 
 export function AddAdmin() {
     const ctx = useContext(APPLICATION_CONTEXT)
@@ -160,6 +161,99 @@ export function AddAdmin() {
 
                 <button disabled={state.loading} type='submit' className={`button mt-4 is-info is-rounded ${state.loading ? 'is-loading' : ''}`}>
                     <FaPlusCircle /> &nbsp; Add Admin Account
+                </button>
+            </div>
+        </form>
+
+    )
+}
+
+export function AddUniversity() {
+    const ctx = useContext(APPLICATION_CONTEXT)
+
+    const [state, setState] = useState({
+        loading: false,
+        name: '',
+        description: '',
+        file: null as null | File
+    })
+
+    const { addToast } = useToasts()
+
+
+    const onNameChange = useCallback((e) => {
+        setState({ ...state, name: e.target.value })
+    }, [state])
+
+    const onDescriptionChange = useCallback((e) => {
+        setState({ ...state, description: e.target.value })
+    }, [state])
+
+    const onFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setState({ ...state, file: e.target?.files?.[0] || null })
+    }, [state])
+
+    const onSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        try {
+            setState({ ...state, loading: true })
+            const { name, description } = state
+            await University.createUniversity(ctx, {
+                name: name.toLowerCase(),
+                description,
+            }, state!.file!)
+            setState({ ...state, loading: false })
+            addToast('Successfully created university!', {
+                appearance: 'success',
+            })
+        } catch (e) {
+            setState({ ...state, loading: false })
+            addToast(e.message || 'Failed to create university!', {
+                appearance: 'error',
+            })
+        }
+    }, [state])
+
+    return (
+        <form className='card has-radius' onSubmit={onSubmit}>
+            <div className='card-content'>
+                <FaUniversity className='is-size-1 mb-2' />
+                <p className='help mb-4 is-uppercase has-text-weight-bold'>Enter University Details</p>
+
+                <div className='field'>
+                    <div className='control has-icons-left'>
+                        <input disabled={state.loading} required className='input' onChange={onNameChange} value={state.name} type='text' placeholder='University name' />
+                        <span className='icon is-small is-left'>
+                            <FaUserTie />
+                        </span>
+                    </div>
+                </div>
+                <div className='field'>
+                    <div className='control'>
+                        <textarea className='textarea' required disabled={state.loading} onChange={onDescriptionChange} value={state.description} placeholder='University description' />
+                    </div>
+                </div>
+
+                <div className='field'>
+                    <div className="file has-name is-fullwidth">
+                        <label className="file-label">
+                            <input disabled={state.loading} className="file-input" type="file" accept='image/*' name="resume" onChange={onFileChange} />
+                            <span className="file-cta">
+                                <span className="file-icon"><FaCloudUploadAlt /></span>
+                                <span className="file-label">Choose Image</span>
+                            </span>
+                            <span className="file-name">
+                                {state.file ? state.file.name : <i>no file selected</i>}
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <button disabled={state.loading} type='submit' className={`button mt-4 is-info is-rounded ${state.loading ? 'is-loading' : ''}`}>
+                    <FaPlusCircle /> &nbsp; Create University
                 </button>
             </div>
         </form>

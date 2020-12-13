@@ -3,6 +3,7 @@ export const links = {
     logout: '/logout',
     users: '/users',
     posts: '/posts',
+    universities: '/universities',
     dashboard: '/dashboard',
     login: '/login',
     register: '/register',
