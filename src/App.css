@@ -32,3 +32,14 @@
 .is-hoverable-card:hover {
     box-shadow: 0 0.5em 1em 0.08em rgba(0, 0, 0, 0.2)
 }
+
+.is-hoverable-row {
+    background-color: #fff;
+}
+
+.is-hoverable-row:hover,
+.is-hoverable-row:focus,
+.is-hoverable-row:active {
+    box-shadow: 0 0.1em 0.2em 0.1em rgba(0, 0, 0, 0.2);
+    background-color: #fafafa;
+}

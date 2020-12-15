@@ -1,6 +1,7 @@
 import moment from "moment";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { FaCheck, FaChevronLeft, FaClock, FaCloudUploadAlt, FaEnvelope, FaGlobe, FaPencilAlt, FaPhoneAlt, FaPhoneSquareAlt, FaPlusCircle, FaTrash, FaUniversity, FaUser, FaUserAltSlash, FaUserCircle, FaUserSlash, FaUserTie } from "react-icons/fa";
+import { FaCheck, FaChevronLeft, FaClock, FaCloudUploadAlt, FaCross, FaEnvelope, FaGlobe, FaPencilAlt, FaPhoneAlt, FaPhoneSquareAlt, FaPlusCircle, FaTrash, FaUniversity, FaUser, FaUserAltSlash, FaUserCircle, FaUserSlash, FaUserTie } from "react-icons/fa";
+import { MdClose } from 'react-icons/md'
 import { useToasts } from "react-toast-notifications";
 import { APPLICATION_CONTEXT } from "../lib";
 import { IUniversity, University } from "../lib/university";
@@ -196,6 +197,11 @@ function UniversityPlayerDetails({ item }: { item: IUniversity }) {
 
     const onRejectRequest = useCallback(async (player) => {
         try {
+            const confirmed = window.confirm('Rejecting request will prevent player from sending requests in future')
+            if (!confirmed) {
+                return
+            }
+
             setState({ ...state, loading: true })
             const result = await University.handleRequest(ctx, item.id, { player, approved: false })
             addToast('Successfully rejected player request!', {
@@ -210,18 +216,18 @@ function UniversityPlayerDetails({ item }: { item: IUniversity }) {
         }
     }, [state])
 
-    const onDeleteRequest = useCallback(async (req, player) => {
+    const onDeleteRequest = useCallback(async (player) => {
         try {
             setState({ ...state, loading: true })
-            const result = await University.deleteRequest(ctx, item.id, player)
+            await University.deleteRequest(ctx, item.id, player)
             addToast('Successfully deleted player request!', {
                 appearance: 'success',
             })
+            setState({ ...state, loading: false, requests: state.requests.filter(v => v.id !== player) })
         } catch (e) {
             addToast(e.message || 'Failed to delete player request!', {
                 appearance: 'error',
             })
-        } finally {
             setState({ ...state, loading: false })
         }
     }, [state])
@@ -238,10 +244,10 @@ function UniversityPlayerDetails({ item }: { item: IUniversity }) {
             }
 
             await University.deletePlayer(ctx, item.id, player)
-            setState({ ...state, loading: false })
             addToast('Successfully removed player!', {
                 appearance: 'success',
             })
+            setState({ ...state, loading: false, players: state.players.filter(v => v.id !== player) })
         } catch (e) {
             setState({ ...state, loading: false })
             addToast(e.message || 'Failed to remove player!', {
@@ -302,11 +308,66 @@ function UniversityPlayerDetails({ item }: { item: IUniversity }) {
                 </ul>
             </div>
             <div>
-                {state[state.show === 'players' ? 'players' : 'requests'].map((i) => {
-                    console.log(i)
-                    return <div>
-                    </div>
-                })}
+                {state.show === 'players' ? (
+                    state.players.length < 1 ?
+                        <EmptyComponent message='No player added yet!' shadow={false} /> :
+                        state.players.map((i) => {
+                            return (
+                                <div className='level px-2 py-2 my-3 is-hoverable-row'>
+                                    <div className='level-left'>
+                                        <div className='level-item'>
+                                            <figure className='image is-48x48' style={{ margin: 'auto' }}>
+                                                <img className='is-rounded' style={{ height: '100%' }} src={i.profileImageURL} />
+                                            </figure>
+                                        </div>
+                                        <div className='level-item has-text-weight-bold is-capitalized'>
+                                            {i.firstName} {i.lastName}
+                                        </div>
+                                    </div>
+                                    <div className='level-right'>
+                                        <div className='level-item'>
+                                            <button onClick={() => onDeletePlayer(i.id)} disabled={state.loading} type='button' className={`button is-danger is-outlined is-rounded is-uppercase`}><MdClose />&nbsp; Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        })
+                ) : (
+                        state.requests.length < 1 ?
+                            <EmptyComponent message='No request available!' shadow={false} /> :
+                            state.requests.map((i) => {
+                                return (
+                                    <div className='level px-2 py-2 my-3 is-hoverable-row'>
+                                        <div className='level-left'>
+                                            <div className='level-item'>
+                                                <figure className='image is-48x48' style={{ margin: 'auto' }}>
+                                                    <img className='is-rounded' style={{ height: '100%' }} src={i.profileImageURL} />
+                                                </figure>
+                                            </div>
+                                            <div className='level-item has-text-weight-bold is-capitalized'>
+                                                {i.firstName} {i.lastName} &nbsp;{i.status === 'rejected' ? <span className={`tag is-danger is-uppercase`}>{i.status}</span> : null}
+                                            </div>
+                                        </div>
+                                        <div className='level-right'>
+                                            {i.status === 'pending' ? (
+                                                <>
+                                                    <div className='level-item'>
+                                                        <button onClick={() => onApproveRequest(i.id)} disabled={state.loading} type='button' className={`button is-success is-outlined is-rounded is-uppercase`}><FaCheck />&nbsp; accept</button>
+                                                    </div>
+
+                                                    <div className='level-item' title='Reject request and prevent player from sending request in future'>
+                                                        <button onClick={() => onRejectRequest(i.id)} disabled={state.loading} type='button' className={`button is-danger is-rounded is-uppercase`}><MdClose />&nbsp; reject</button>
+                                                    </div>
+                                                </>
+                                            ) : null}
+                                            <div className='level-item'>
+                                                <button onClick={() => onDeleteRequest(i.id)} disabled={state.loading} type='button' className={`button is-danger is-outlined is-rounded is-uppercase`}><span className='icon'><FaTrash /></span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                    )}
             </div>
         </div >
 
