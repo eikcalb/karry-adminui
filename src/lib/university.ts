@@ -125,4 +125,110 @@ export class University {
         }
     }
 
+    static async handleRequest(app: Application, id: string, { player, approved }) {
+        try {
+            if (!player || (!approved && approved !== false)) {
+                throw new Error("Kindly provide player and specify action!")
+            }
+            const response = await app.initiateNetworkRequest(`/admin/universities/${id}/request`, {
+                method: 'POST',
+                referrerPolicy: "no-referrer",
+                headers: {
+                    'Accept': 'application/json',
+                    'x-access-token': `${app.user?.token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ player, approved })
+            })
+            if (!response.ok) {
+                throw new Error((await response.json()).error)
+            }
+
+            return true
+        } catch (e) {
+            throw e
+        }
+    }
+
+    static async getRequests(app: Application, id: string) {
+        try {
+            const response = await app.initiateNetworkRequest(`/admin/universities/${id}/request`, {
+                method: 'GET',
+                referrerPolicy: "no-referrer",
+                headers: {
+                    'Accept': 'application/json',
+                    'x-access-token': `${app.user?.token}`,
+                },
+            })
+            if (!response.ok) {
+                throw new Error((await response.json()).error)
+            }
+
+            return response.json()
+        } catch (e) {
+            throw e
+        }
+    }
+
+    static async deleteRequest(app: Application, id: string, player) {
+        try {
+            const response = await app.initiateNetworkRequest(`/admin/universities/${id}/request/${player}`, {
+                method: 'DELETE',
+                referrerPolicy: "no-referrer",
+                headers: {
+                    'Accept': 'application/json',
+                    'x-access-token': `${app.user?.token}`,
+                    'Content-Type': 'application/json',
+                },
+            })
+            if (!response.ok) {
+                throw new Error((await response.json()).error)
+            }
+
+            return true
+        } catch (e) {
+            throw e
+        }
+    }
+    
+    static async getPlayers(app: Application, id: string) {
+        try {
+            const response = await app.initiateNetworkRequest(`/admin/universities/${id}/player`, {
+                method: 'GET',
+                referrerPolicy: "no-referrer",
+                headers: {
+                    'Accept': 'application/json',
+                    'x-access-token': `${app.user?.token}`,
+                },
+            })
+            if (!response.ok) {
+                throw new Error((await response.json()).error)
+            }
+
+            return response.json()
+        } catch (e) {
+            throw e
+        }
+    }
+
+    static async deletePlayer(app: Application, id: string,player) {
+        try {
+            const response = await app.initiateNetworkRequest(`/admin/universities/${id}/${player}`, {
+                method: 'DELETE',
+                referrerPolicy: "no-referrer",
+                headers: {
+                    'Accept': 'application/json',
+                    'x-access-token': `${app.user?.token}`,
+                },
+            })
+            if (!response.ok) {
+                throw new Error((await response.json()).error)
+            }
+
+            return true
+        } catch (e) {
+            throw e
+        }
+    }
+
 }

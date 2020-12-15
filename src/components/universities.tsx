@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { FaCheck, FaChevronLeft, FaClock, FaCloudUploadAlt, FaEnvelope, FaGlobe, FaPencilAlt, FaPhoneAlt, FaPhoneSquareAlt, FaPlusCircle, FaTrash, FaUniversity, FaUser, FaUserAltSlash, FaUserCircle, FaUserSlash, FaUserTie } from "react-icons/fa";
 import { useToasts } from "react-toast-notifications";
 import { APPLICATION_CONTEXT } from "../lib";
@@ -145,6 +145,9 @@ export function UniversityDetails({ uni: uniProp, onCancel }: { uni: IUniversity
                                 <p className='is-capitalized has-text-weight-bold'>{state.name}</p>
                                 <p className='mt-4'>{state.description}</p>
                             </div>
+
+                            <UniversityPlayerDetails item={state.university} />
+
                             <div className='field is-grouped is-grouped-centered'>
                                 <div className='control'>
                                     <button onClick={onCancel} disabled={state.loading} type='button' className={`button mt-4 is-dark is-outlined is-rounded is-uppercase`}><FaChevronLeft />&nbsp; Back</button>
@@ -158,6 +161,152 @@ export function UniversityDetails({ uni: uniProp, onCancel }: { uni: IUniversity
                             </div>
                         </>
                     )}
+            </div>
+        </div >
+
+    )
+}
+
+function UniversityPlayerDetails({ item }: { item: IUniversity }) {
+    const ctx = useContext(APPLICATION_CONTEXT)
+    const [state, setState] = useState({
+        requests: [] as any,
+        players: [] as any,
+        loading: false,
+        show: 'players' as 'players' | 'requests',
+    })
+
+    const { addToast } = useToasts()
+
+    const onApproveRequest = useCallback(async (player) => {
+        try {
+            setState({ ...state, loading: true })
+            const result = await University.handleRequest(ctx, item.id, { player, approved: true })
+            addToast('Successfully approved player request!', {
+                appearance: 'success',
+            })
+        } catch (e) {
+            addToast(e.message || 'Failed to approve player request!', {
+                appearance: 'error',
+            })
+        } finally {
+            setState({ ...state, loading: false })
+        }
+    }, [state])
+
+    const onRejectRequest = useCallback(async (player) => {
+        try {
+            setState({ ...state, loading: true })
+            const result = await University.handleRequest(ctx, item.id, { player, approved: false })
+            addToast('Successfully rejected player request!', {
+                appearance: 'success',
+            })
+        } catch (e) {
+            addToast(e.message || 'Failed to reject player request!', {
+                appearance: 'error',
+            })
+        } finally {
+            setState({ ...state, loading: false })
+        }
+    }, [state])
+
+    const onDeleteRequest = useCallback(async (req, player) => {
+        try {
+            setState({ ...state, loading: true })
+            const result = await University.deleteRequest(ctx, item.id, player)
+            addToast('Successfully deleted player request!', {
+                appearance: 'success',
+            })
+        } catch (e) {
+            addToast(e.message || 'Failed to delete player request!', {
+                appearance: 'error',
+            })
+        } finally {
+            setState({ ...state, loading: false })
+        }
+    }, [state])
+
+    const onDeletePlayer = useCallback(async (player) => {
+        try {
+            setState({ ...state, loading: true })
+
+            const confirmDelete = window.confirm('Are you sure you want to remove this player from selected university?')
+
+            if (!confirmDelete) {
+                setState({ ...state, loading: false })
+                return
+            }
+
+            await University.deletePlayer(ctx, item.id, player)
+            setState({ ...state, loading: false })
+            addToast('Successfully removed player!', {
+                appearance: 'success',
+            })
+        } catch (e) {
+            setState({ ...state, loading: false })
+            addToast(e.message || 'Failed to remove player!', {
+                appearance: 'error',
+            })
+        }
+    }, [state])
+
+    const getRequests = useCallback(async () => {
+        try {
+            const requests = await University.getRequests(ctx, item.id)
+            return requests
+        } catch (e) {
+            addToast(e.message || 'Failed to fetch requests!', {
+                appearance: 'error',
+            })
+        }
+    }, [state])
+
+    const getPlayers = useCallback(async () => {
+        try {
+            const players = await University.getPlayers(ctx, item.id)
+            return players
+        } catch (e) {
+            addToast(e.message || 'Failed to fetch players!', {
+                appearance: 'error',
+            })
+        }
+    }, [state])
+
+    useEffect(() => {
+        new Promise(async (res) => {
+            setState((state) => ({ ...state, loading: true }))
+            const players = await getPlayers()
+            const requests = await getRequests()
+            setState((state) => ({ ...state, loading: false, requests, players }))
+            res()
+        }).catch((e) => {
+            console.log(e)
+            setState((state) => ({ ...state, loading: false }))
+        })
+    }, [])
+
+    return (
+        <div className='section'>
+            <div className="tabs is-centered is-toggle is-uppercase">
+                <ul>
+                    <li onClick={() => setState({ ...state, show: 'players' })} className={state.show === 'players' ? `is-active` : ''}>
+                        <a>
+                            <span>Players</span>
+                        </a>
+                    </li>
+                    <li onClick={() => setState({ ...state, show: 'requests' })} className={state.show === 'requests' ? `is-active` : ''}>
+                        <a>
+                            <span>Requests</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                {state[state.show === 'players' ? 'players' : 'requests'].map((i) => {
+                    console.log(i)
+                    return <div>
+                    </div>
+                })}
             </div>
         </div >
 
