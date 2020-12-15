@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/karry-adminui/static/css/main.8c44a825.chunk.css",
-    "main.js": "/karry-adminui/static/js/main.7b4d7bae.chunk.js",
-    "main.js.map": "/karry-adminui/static/js/main.7b4d7bae.chunk.js.map",
+    "main.css": "/karry-adminui/static/css/main.e0b97f71.chunk.css",
+    "main.js": "/karry-adminui/static/js/main.8c111163.chunk.js",
+    "main.js.map": "/karry-adminui/static/js/main.8c111163.chunk.js.map",
     "runtime-main.js": "/karry-adminui/static/js/runtime-main.39a43be2.js",
     "runtime-main.js.map": "/karry-adminui/static/js/runtime-main.39a43be2.js.map",
     "static/css/2.ba242066.chunk.css": "/karry-adminui/static/css/2.ba242066.chunk.css",
-    "static/js/2.03f9f482.chunk.js": "/karry-adminui/static/js/2.03f9f482.chunk.js",
-    "static/js/2.03f9f482.chunk.js.map": "/karry-adminui/static/js/2.03f9f482.chunk.js.map",
+    "static/js/2.339b83e4.chunk.js": "/karry-adminui/static/js/2.339b83e4.chunk.js",
+    "static/js/2.339b83e4.chunk.js.map": "/karry-adminui/static/js/2.339b83e4.chunk.js.map",
     "index.html": "/karry-adminui/index.html",
-    "precache-manifest.edd830df080feb142abf07109ea60664.js": "/karry-adminui/precache-manifest.edd830df080feb142abf07109ea60664.js",
+    "precache-manifest.2d0609ef985957b1b407982e26f03ced.js": "/karry-adminui/precache-manifest.2d0609ef985957b1b407982e26f03ced.js",
     "service-worker.js": "/karry-adminui/service-worker.js",
     "static/css/2.ba242066.chunk.css.map": "/karry-adminui/static/css/2.ba242066.chunk.css.map",
-    "static/css/main.8c44a825.chunk.css.map": "/karry-adminui/static/css/main.8c44a825.chunk.css.map",
-    "static/js/2.03f9f482.chunk.js.LICENSE.txt": "/karry-adminui/static/js/2.03f9f482.chunk.js.LICENSE.txt",
+    "static/css/main.e0b97f71.chunk.css.map": "/karry-adminui/static/css/main.e0b97f71.chunk.css.map",
+    "static/js/2.339b83e4.chunk.js.LICENSE.txt": "/karry-adminui/static/js/2.339b83e4.chunk.js.LICENSE.txt",
     "static/media/loading_icon.gif": "/karry-adminui/static/media/loading_icon.1a7489ab.gif"
   },
   "entrypoints": [
     "static/js/runtime-main.39a43be2.js",
     "static/css/2.ba242066.chunk.css",
-    "static/js/2.03f9f482.chunk.js",
-    "static/css/main.8c44a825.chunk.css",
-    "static/js/main.7b4d7bae.chunk.js"
+    "static/js/2.339b83e4.chunk.js",
+    "static/css/main.e0b97f71.chunk.css",
+    "static/js/main.8c111163.chunk.js"
   ]
 }

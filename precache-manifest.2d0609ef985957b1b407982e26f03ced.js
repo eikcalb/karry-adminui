@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "fd3948fa2b200d71599079d783d39fc3",
+    "revision": "6ab92e29eb21f7dd12dbb9a10b72d193",
     "url": "/karry-adminui/index.html"
   },
   {
-    "revision": "34683618fc7b33c64f56",
+    "revision": "a96adb47d08eef96abc2",
     "url": "/karry-adminui/static/css/2.ba242066.chunk.css"
   },
   {
-    "revision": "02489246dd1b54226c3c",
-    "url": "/karry-adminui/static/css/main.8c44a825.chunk.css"
+    "revision": "33404e4d93fc54cfadb8",
+    "url": "/karry-adminui/static/css/main.e0b97f71.chunk.css"
   },
   {
-    "revision": "34683618fc7b33c64f56",
-    "url": "/karry-adminui/static/js/2.03f9f482.chunk.js"
+    "revision": "a96adb47d08eef96abc2",
+    "url": "/karry-adminui/static/js/2.339b83e4.chunk.js"
   },
   {
     "revision": "c64c486544348f10a6d6c716950bc223",
-    "url": "/karry-adminui/static/js/2.03f9f482.chunk.js.LICENSE.txt"
+    "url": "/karry-adminui/static/js/2.339b83e4.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "02489246dd1b54226c3c",
-    "url": "/karry-adminui/static/js/main.7b4d7bae.chunk.js"
+    "revision": "33404e4d93fc54cfadb8",
+    "url": "/karry-adminui/static/js/main.8c111163.chunk.js"
   },
   {
     "revision": "48d7b10056de5f6cc702",
