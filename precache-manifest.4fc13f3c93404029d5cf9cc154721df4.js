@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "7cadfcead5e302cbc3e5cd0205783753",
+    "revision": "ff0ccdb98bc8be852c13a7aa4b7149b6",
     "url": "/karry-adminui/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/karry-adminui/static/css/2.ba242066.chunk.css"
   },
   {
-    "revision": "799212a3fc265fdc63e2",
+    "revision": "950147ee60e2148871a8",
     "url": "/karry-adminui/static/css/main.e0b97f71.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/karry-adminui/static/js/2.9264f638.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "799212a3fc265fdc63e2",
-    "url": "/karry-adminui/static/js/main.6d485115.chunk.js"
+    "revision": "950147ee60e2148871a8",
+    "url": "/karry-adminui/static/js/main.5dcf92cf.chunk.js"
   },
   {
     "revision": "48d7b10056de5f6cc702",
