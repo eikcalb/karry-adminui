@@ -46,6 +46,7 @@ export default function Toolbar({ hidden = false }) {
                     <>
                         <div className='navbar-start'>
                             <NavLink className='navbar-item is-tab is-uppercase' exact to={links.dashboard} activeClassName='is-active'>Dashboard</NavLink>
+                            <NavLink className='navbar-item is-tab is-uppercase' to={links.ads} activeClassName='is-active'>Ads</NavLink>
                             <NavLink className='navbar-item is-tab is-uppercase' to={links.posts} activeClassName='is-active'>Posts</NavLink>
                             <NavLink className='navbar-item is-tab is-uppercase' to={links.users} activeClassName='is-active'>Users</NavLink>
                             <NavLink className='navbar-item is-tab is-uppercase' to={links.universities} activeClassName='is-active'>Universities</NavLink>

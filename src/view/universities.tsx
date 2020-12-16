@@ -10,7 +10,7 @@ import { Stat } from '../lib/stat';
 import { User, USERS_PAGE_LIMIT } from '../lib/user';
 import { useToasts } from 'react-toast-notifications';
 import { UserDetails } from '../components/users';
-import { IUniversity, University } from '../lib/university';
+import { IUniversity, UNINVERSITY_PAGE_LIMIT as UNIVERSITY_PAGE_LIMIT, University } from '../lib/university';
 import { UniversityDetails } from '../components/universities';
 
 const numberFormatter = Intl.NumberFormat()
@@ -45,7 +45,7 @@ export function Universities() {
     const onLoadMore = useCallback(async () => {
         try {
             setState({ ...state, loadingMore: true })
-            const items = await University.getAllUniversities(ctx, Math.max(2, Math.ceil(state.items.length / USERS_PAGE_LIMIT) + 1))
+            const items = await University.getAllUniversities(ctx, Math.max(2, Math.ceil(state.items.length / UNIVERSITY_PAGE_LIMIT) + 1))
             if (items.length < 1) {
                 addToast("No new data to fetch!", {
                     appearance: 'info'
@@ -55,7 +55,7 @@ export function Universities() {
             setState({ ...state, loadingMore: false, items: [...state.items, ...items] })
         } catch (e) {
             console.log(e)
-            setState({ ...state, loadingMore: true })
+            setState({ ...state, loadingMore: false })
 
             addToast("Failed to load new data!", {
                 appearance: 'error'
@@ -75,7 +75,7 @@ export function Universities() {
             setState({ ...state, loadingMore: false, items })
         }).catch(e => {
             console.log(e)
-            setState({ ...state, loadingMore: true })
+            setState({ ...state, loadingMore: false })
 
             addToast("Failed to load new data!", {
                 appearance: 'error'

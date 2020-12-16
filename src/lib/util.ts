@@ -4,6 +4,7 @@ export const links = {
     users: '/users',
     posts: '/posts',
     universities: '/universities',
+    ads: '/ads',
     dashboard: '/dashboard',
     login: '/login',
     register: '/register',

@@ -65,7 +65,7 @@ export function Reports() {
             setState({ ...state, loadingMore: false, reports: [...state.reports, ...reports] })
         } catch (e) {
             console.log(e)
-            setState({ ...state, loadingMore: true })
+            setState({ ...state, loadingMore: false })
 
             addToast("Failed to load new data!", {
                 appearance: 'error'
@@ -86,7 +86,7 @@ export function Reports() {
             setState({ ...state, loadingMore: false, reports })
         }).catch(e => {
             console.log(e)
-            setState({ ...state, loadingMore: true })
+            setState({ ...state, loadingMore: false })
 
             addToast("Failed to load new data!", {
                 appearance: 'error'

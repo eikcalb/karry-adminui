@@ -14,6 +14,7 @@ import { Posts } from "../view/posts";
 import { EmptyComponent } from "./misc";
 import { Reports } from "../view/reports";
 import { Universities } from "../view/universities";
+import { Ads } from "../view/ads";
 
 
 const Loading = () => {
@@ -61,6 +62,9 @@ export const Body = ({ showLoading }: { showLoading?: boolean }) => {
                 </AuthGuard>
                 <AuthGuard path={links.universities} exact>
                     <Universities />
+                </AuthGuard>
+                <AuthGuard path={links.ads} exact>
+                    <Ads />
                 </AuthGuard>
                 <AuthGuard path={links.posts} exact>
                     <Posts />
