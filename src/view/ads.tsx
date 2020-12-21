@@ -34,7 +34,7 @@ function Item({ ad: adProp, onUpdate, onDelete }: { ad: IAd, onUpdate: (ad: IAd)
                         {ad.type === 'image' ? (
                             <img style={{ height: '100%' }} src={ad.mediaURL} />
                         ) : (
-                                <video autoPlay={false} controls src={ad.mediaURL} />
+                                <video className='has-ratio' autoPlay={false} controls src={ad.mediaURL} />
                             )}
                     </figure>
                     <div className='px-2 py-2'>
